@@ -1,0 +1,70 @@
+.pxl--progressbar {
+    @include transition(width 1.4s ease);
+    width: 0;
+    &.vertical {
+        @include transition(height 1.4s ease);
+        height: 0;
+    }
+}
+.pxl-progressbar-1 {
+    &.style-1 {
+        .pxl--item {
+            display: inline-flex;
+            align-items: center;
+            border-bottom: 1px solid #373230;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            &:last-child {
+                margin-bottom: 0;
+            }
+            .pxl-image {
+                min-width: 61px;
+                &.pxl-mr-30 {
+                    margin-right: 15px;
+                }
+            }
+            .pxl-item-content {
+                .pxl-item-text {
+                    font-size: 16px;
+                    color: #e6e6e6;
+                    margin-bottom: 17px;
+                    .pxl-item-text-blue {
+                        color: #009bd6;
+                        font-weight: bold;
+                    }
+                }
+            }
+            .pxl--meta {
+                margin-top: 5px;
+            }
+            .pxl-progressbar--wrap {
+                height: 4px;
+                background-color: #3f3f3f;
+                .pxl--progressbar {
+                    height: 4px;
+                    background: linear-gradient(100deg, #ff009c 0.51%, #a200ff 100%);
+                    position: relative;
+                }
+            }
+            .pxl--title {
+                font-size: 12px;
+                font-weight: bold;
+                color: #fff;
+                text-transform: uppercase;
+                font-family: 'Inter Tight', sans-serif;
+                margin-bottom: 0;
+            }
+            .pxl--percentage {
+                font-size: 12px;
+                font-weight: bold;
+                color: #fff;
+                text-transform: uppercase;
+                font-family: 'Inter Tight', sans-serif;
+            }
+        }
+    }
+}
+
+body.rtl {
+    
+}

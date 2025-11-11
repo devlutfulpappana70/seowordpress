@@ -1,0 +1,40 @@
+//memu-unitest
+.pxl-primary-menu-not-set {
+	box-shadow: none;
+	li {
+		a {
+			&:hover {
+				color: $primary_color !important;
+			}
+		}
+	}
+}
+
+.widget_block {
+	.wp-block-search__label {
+		margin-bottom: 20px;
+		color: #000;
+		font-weight: 600;
+	}
+	.wp-block-group__inner-container {
+		> h2 {
+			margin-bottom: 20px;
+			color: #000;
+			font-weight: 600;
+		}
+	}
+}
+
+//* pxl-item--archive */
+.pxl-item--archive {
+	&.pxl-item--standard {
+		.pxl-item--title {
+			a {
+				width: 100%;
+				display: -webkit-box;
+				word-break: break-word;
+				-webkit-box-orient: vertical;
+			}
+		}
+	}
+}
