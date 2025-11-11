@@ -1,0 +1,180 @@
+<?php
+
+$html_id = pxl_get_element_id($settings);
+$source    = $widget->get_setting('source_'.$settings['post_type']);
+$orderby = $widget->get_setting('orderby', 'date');
+$order = $widget->get_setting('order', 'desc');
+$limit = $widget->get_setting('limit', 6);
+$post_ids = $widget->get_setting('post_ids', '');
+$settings['layout']    = $settings['layout_'.$settings['post_type']];
+extract(pxl_get_posts_of_grid('post', [
+    'source' => $source,
+    'orderby' => $orderby,
+    'order' => $order,
+    'limit' => $limit,
+    'post_ids' => $post_ids,
+]));
+
+$pxl_animate = $widget->get_setting('pxl_animate', '');
+$col_xs = $widget->get_setting('col_xs', '');
+$col_sm = $widget->get_setting('col_sm', '');
+$col_md = (int)$widget->get_setting('col_md', '');
+if($col_md == 'custom') {
+    $col_md = $widget->get_setting('col_md_custom', '');
+}
+$col_lg = (int)$widget->get_setting('col_lg', '');
+if($col_lg == 'custom') {
+    $col_lg = $widget->get_setting('col_lg_custom', '');
+}
+$col_xl = (int)$widget->get_setting('col_xl', '');
+if($col_xl == 'custom') {
+    $col_xl = $widget->get_setting('col_xl_custom', '');
+}
+$col_xxl = (int)$widget->get_setting('col_xxl', '');
+if($col_xxl == 'custom') {
+    $col_xxl = $widget->get_setting('col_xxl_custom', '');
+}
+$slides_to_scroll = $widget->get_setting('slides_to_scroll', '');
+
+$arrows = $widget->get_setting('arrows', false);  
+$pagination = $widget->get_setting('pagination', false);
+$pagination_type = $widget->get_setting('pagination_type', 'bullets');
+$pause_on_hover = $widget->get_setting('pause_on_hover', false);
+$autoplay = $widget->get_setting('autoplay', false);
+$autoplay_speed = $widget->get_setting('autoplay_speed', 5000);
+$infinite = $widget->get_setting('infinite', false);
+$speed = $widget->get_setting('speed', 500);
+
+$img_size = $widget->get_setting('img_size');
+$show_author = $widget->get_setting('show_author');
+$show_category = $widget->get_setting('show_category');
+$show_date = $widget->get_setting('show_date');
+$show_button = $widget->get_setting('show_button');
+$button_text = $widget->get_setting('button_text');
+
+$opts = [
+    'slide_direction'               => 'horizontal',
+    'slide_percolumn'               => 1, 
+    'slide_percolumnfill'           => 1, 
+    'slide_mode'                    => 'slide', 
+    'slides_to_show'                => $col_xl,
+    'slides_to_show_xxl'            => $col_xxl,  
+    'slides_to_show_lg'             => $col_lg, 
+    'slides_to_show_md'             => $col_md, 
+    'slides_to_show_sm'             => (int)$col_sm, 
+    'slides_to_show_xs'             => (int)$col_xs, 
+    'slides_to_scroll'              => (int)$slides_to_scroll,  
+    'slides_gutter'                 => 30, 
+    'arrow'                         => (bool)$arrows,
+    'pagination'                    => (bool)$pagination,
+    'pagination_type'               => $pagination_type,
+    'autoplay'                      => (bool)$autoplay,
+    'pause_on_hover'                => (bool)$pause_on_hover,
+    'pause_on_interaction'          => true,
+    'delay'                         => (int)$autoplay_speed,
+    'loop'                          => (bool)$infinite,
+    'speed'                         => (int)$speed
+];
+
+$widget->add_render_attribute( 'carousel', [
+    'class'         => 'pxl-swiper-container',
+    'dir'           => is_rtl() ? 'rtl' : 'ltr',
+    'data-settings' => wp_json_encode($opts)
+]); ?>
+
+<?php if (is_array($posts)): ?>
+    <div class="pxl-swiper-slider pxl-post-carousel pxl-post-carousel2 pxl-swiper-boxshadow <?php echo esc_attr($pxl_animate); ?>" <?php if($settings['drap'] !== false) : ?>data-cursor-drap="<?php echo esc_html('DRAG', 'seon'); ?>"<?php endif; ?>>
+        <div class="pxl-carousel-inner">
+            <div <?php pxl_print_html($widget->get_render_attribute_string( 'carousel' )); ?>>
+                <div class="pxl-swiper-wrapper">
+                    <?php
+                        $image_size = !empty($img_size) ? $img_size : '600x412';
+                        foreach ($posts as $key => $post):
+                        $img_id       = get_post_thumbnail_id( $post->ID );
+                        $author = get_user_by('id', $post->post_author);
+                        $author_avatar = get_avatar( $post->post_author, 60, '', $author->display_name, array( 'class' => '' ) );
+                        $user_position = get_user_meta(get_the_author_meta( 'ID' ), 'user_position', true);
+                        $post_video_link = get_post_meta($post->ID, 'post_video_link', true); ?>
+                        <div class="pxl-swiper-slide">
+                            <div class="pxl-item--inner">
+                                <?php if (has_post_thumbnail($post->ID) && wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), false)):
+                                    $img_id = get_post_thumbnail_id($post->ID);
+                                    $img          = pxl_get_image_by_size( array(
+                                        'attach_id'  => $img_id,
+                                        'thumb_size' => $image_size
+                                    ) );
+                                    $thumbnail    = $img['thumbnail'];
+                                    ?>
+                                    <div class="pxl-post--featured hover-imge-effect2">
+                                        <a href="<?php echo esc_url(get_permalink( $post->ID )); ?>"><?php echo wp_kses_post($thumbnail); ?></a>
+                                        <svg class="pxl-post--shape1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 370 105"><path d="M-2,81C33.959,63.669,69.514,54.924,105,55c45.547,0.1,72.086,15.068,110,0,31.572-12.548,36.579-31.914,68-45,26.52-11.045,56.439-11.832,89-4V106H-1Z"/></svg>
+                                        <svg class="pxl-post--shape2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 370 105">
+                                            <defs>
+                                                <linearGradient id="<?php echo esc_attr($html_id.$key); ?>" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                    <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:1" />
+                                                    <stop offset="100%" style="stop-color:#004eff;stop-opacity:1" />
+                                                </linearGradient>
+                                            </defs>
+                                            <path fill="url(#<?php echo esc_attr($html_id.$key); ?>)" d="M-2,81C33.959,63.669,69.514,54.924,105,55c45.547,0.1,72.086,15.068,110,0,31.572-12.548,36.579-31.914,68-45,26.52-11.045,56.439-11.832,89-4V106H-1Z"/>
+                                        </svg>
+                                        <?php if($show_author == 'true'): ?>
+                                            <div class="pxl-post--author">
+                                                <div class="pxl-author--img">
+                                                    <?php pxl_print_html($author_avatar); ?>
+                                                </div>
+                                                <div class="pxl-author-name">
+                                                    <?php echo esc_html__('by', 'seon'); ?> <span><?php echo esc_html($author->display_name); ?></span>
+                                                </div>
+                                                <a href="<?php echo esc_url(get_author_posts_url($post->post_author, $author->user_nicename)); ?>"></a>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="pxl-post--holder">
+                                    <div class="pxl-post--meta">
+                                        <?php if($show_category == 'true'): ?>
+                                            <div class="pxl-post--category">
+                                                <?php the_terms( $post->ID, 'category', '', ' ' ); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if($show_date == 'true'): ?>
+                                            <div class="pxl-post--date"><?php $date_formart = get_option('date_format'); echo get_the_date($date_formart, $post->ID); ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <h3 class="pxl-post--title title-hover-line"><a href="<?php echo esc_url(get_permalink( $post->ID )); ?>"><?php echo esc_attr(get_the_title($post->ID)); ?></a></h3>
+                                    <?php if($show_button == 'true') : ?>
+                                        <div class="pxl-post--readmore">
+                                            <span class="pxl-loadmore-icon icon-front">+</span>
+                                            <a href="<?php echo esc_url(get_permalink( $post->ID )); ?>">
+                                                <span><?php if(!empty($button_text)) {
+                                                    echo esc_attr($button_text);
+                                                } else {
+                                                    echo esc_html__('Read more', 'seon');
+                                                } ?></span>
+                                                <span class="pxl-loadmore-icon">+</span>
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div> 
+            </div>
+            
+            <?php if($pagination !== false): ?>
+                <div class="pxl-swiper-dots-wrap">
+                    <div class="pxl-swiper-dots style-1"></div>
+                </div>
+            <?php endif; ?>
+
+            <?php if($arrows !== false): ?>
+                <div class="pxl-swiper-arrow-wrap style-3">
+                    <div class="pxl-swiper-arrow pxl-swiper-arrow-prev"><i class="fal fa-arrow-left"></i></div>
+                    <div class="pxl-swiper-arrow pxl-swiper-arrow-next"><i class="fal fa-arrow-right"></i></div>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
+<?php endif; ?>
